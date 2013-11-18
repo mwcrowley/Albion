@@ -1,0 +1,269 @@
+<head>
+  <title>Alameda</title>
+   <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Matt Crowley's Portfolio | UI, UX & Product Design</title>
+    <meta name="description" content="The projects, hobbies, products and curiosities of designer Matt Crowley.">
+    <meta name="keywords" content="UI, UX, Design, Product Design, Apple, Experience Design, Manufacturing Design, and Interfaces">
+    <meta name="author" content="Matt Crowley">
+
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet/less" type="text/css" href="css/styles.less" />
+
+</head>
+
+<body>
+	{{> userHeader}}
+	<div class="content-container">
+		
+		{{> categoryTemplate}}
+
+		{{#if currentUser}}
+			
+		{{else}}
+			<p>Please Log In</p>
+		{{/if}}
+	</div>
+</body>
+
+<template name="welcomeScreen">
+  <div class="welcome-header">
+  		<h1>alby</h2>
+  		<h2>with a little help from your friends, find:</h2>
+
+  		<div class="category-bar">
+	  		<div id="housing" class="category">
+	  			<p class="test">housing</p>
+	  		</div>
+	  		<div id="jobs" class="category">
+	  			<p>jobs</p>
+	  		</div>
+	  		<div id="relationships" class="category">
+	  			<p>people</p>
+	  		</div>
+  		</div>
+	</div>
+</template>
+
+
+<template name="categoryTemplate">
+		<div class="category-page">
+			<div class="category-header">
+				<div class="small-logo">alby</div>
+				<div class="category-icon"></div>
+				<div class="category-title">housing</div>
+			</div>
+			<div class="filter-bar">
+
+				<!-- LOCATION -->
+				<div class="dropdown">
+				  <button class="btn dropdown-toggle sr-only" type="button" id="dropdownMenu1" data-toggle="dropdown">
+				    location: san francisco
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Denver</a></li>
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">New York</a></li>
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Bariloche</a></li>
+				  </ul>
+				</div>
+				<!-- CIRCLE -->
+				<div class="dropdown">
+				  <button class="btn dropdown-toggle sr-only" type="button" id="dropdownMenu2" data-toggle="dropdown">
+				    circle: facebook
+				    <span class="caret"></span>
+				  </button>
+				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">twitter</a></li>
+				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">linkedIn</a></li>
+				    <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">instagram</a></li>
+				  </ul>
+				</div>
+				<!-- ADD POSTING -->
+				<button class="btn postSearch" type="button" id="postSearch" href="#">Looking For</button>
+			</div>
+			<div class="vertical"></div>
+
+			{{> searchPostInputTemplate}}
+			<div class="post-container">
+			</div>	
+		</div>
+</template>
+
+
+<template name="housingPostTemplate">
+	<div class="media post-object">
+	  <a class="pull-left" href="#">
+	    <img class="media-object img-rounded" src="/img/user.png" alt="..."></img>
+	    <p class="poster-name">{{posterName}}</p>
+	  </a>
+	  <div class="media-body">
+	    <h4 class="media-heading">{{postTitle}}</h4>
+	    <p class="post-content">{{postContent}}</p>
+	    <p class="post-location">{{postLocation}}</p>
+	    <p class="post-time">{{postTime}}</p>
+	  </div>
+	  <div class="media-options">
+	  	<p class="save-media">Save</p>
+	  	<p class="send-media">Send to Friend</p>
+	  	<p class="contact-poster">Contact</p>
+	  </div>
+	</div>
+</template>
+
+
+
+
+<template name="searchPostInputTemplate">
+	<div class="media post-object new-post-object">
+	  <a class="pull-left" href="]#">
+	    <img class="media-object img-rounded" src="/img/user.png" alt="..."></img>
+	    <p class="poster-name">{{posterName}}</p>
+	  </a>
+	  <form id="new-home-post-form" class="media-body">
+	   	<input class="media-heading" name="postTitle" type="text" placeholder="Title of post">
+	   	<input class="media-heading" name="postContent" type="text" placeholder="Content of post">
+	    <input class="location" name="postLocation" type="text" placeholder="Where is the house?">
+	    <input class="category" name="postSubCategory" type="text" placeholder="Roommate">
+	  </form>
+	  <div class="media-options">
+	  	<p class="publish-post">Publish</p>
+	  	<p class="send-media">Send to Friend</p>
+	  	<p class="contact-poster">Contact</p>
+	  	<p class="cancel-post">Cancel</p>
+	  </div>
+	</div>
+</template>
+
+<template name="userHeader">
+	<div class="userHeader">
+		{{#if currentUser}}
+			{{> userBar}}
+		{{else}}
+			{{loginButtons}}
+		{{/if}}
+	</div>
+</template>
+
+<template name="userBar">
+	<div class="btn-group">
+  		<button class="btn"><img class="img-circle" src="https://graph.facebook.com/{{facebookHandle}}/picture" > {{facebookID}}</button>
+  		<button class="btn dropdown-toggle" data-toggle="dropdown">
+    	<span class="caret"></span>
+		</button>
+	  	<ul class="dropdown-menu">
+	  		<li><a>User ID: {{userID}}</a></li>
+	  		<li><a>Facebook ID: {{facebookID}}</a></li>
+	  		<li><a>Number of posts: {{numPosts}}</a></li>
+	  		<li class="divider"></li>
+	  		<li><a class="userLogout">Logout</a></li>
+	    <!-- dropdown menu links -->
+	  	</ul>
+	</div>
+</template>
+
+
+<template name="userSettings">
+	<div class="userOptions">
+
+		{{addUserCategories}}
+		<h1 class="inline">Housing</h1>
+
+		<form name="userOptionRadios">
+		<div class="input-prepend input-append"> 
+		  	<span class="add-on">A House</span>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+			  Have
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2"> Need
+			</label>
+		</div>
+		<div class="input-prepend input-append"> 
+		  	<span class="add-on">A Couch</span>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios2" id="optionsRadios1" value="option1" checked>
+			  Have
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios2" id="optionsRadios2" value="option2"> Need
+			</label>
+		</div>
+		<div class="input-prepend input-append"> 
+		  	<span class="add-on">Roommate</span>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios3" id="optionsRadios1" value="option1" checked>
+			  Have
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios3" id="optionsRadios2" value="option2"> Need
+			</label>
+		</div>
+
+		<h1 class="inline">Jobs</h1>
+		<div class="input-prepend input-append"> 
+		  	<span class="add-on">Job</span>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios4" id="optionsRadios1" value="option1" checked>
+			  Have
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios4" id="optionsRadios2" value="option2"> Need
+			</label>
+		</div>
+		<div class="input-prepend input-append"> 
+		  	<span class="add-on">Internship</span>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios5" id="optionsRadios1" value="option1" checked>
+			  Have
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios5" id="optionsRadios2" value="option2"> Need
+			</label>
+		</div>
+		<div class="input-prepend input-append"> 
+		  	<span class="add-on">Coffee</span>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios6" id="optionsRadios1" value="option1" checked>
+			  Have
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios6" id="optionsRadios2" value="option2"> Need
+			</label>
+		</div>
+		<h1 class="inline">People</h1>
+		<div class="input-prepend input-append"> 
+		  	<span class="add-on">Hangout</span>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios7" id="optionsRadios1" value="option1" checked>
+			  Have
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios7" id="optionsRadios2" value="option2"> Need
+			</label>
+		</div>
+		<div class="input-prepend input-append"> 
+		  	<span class="add-on">Date</span>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios8" id="optionsRadios1" value="option1" checked>
+			  Have
+			</label>
+			<label class="radio inline">
+			  <input type="radio" name="optionsRadios8" id="optionsRadios2" value="option2"> Need
+			</label>
+		</div>
+	</form>
+
+
+	</div>
+
+</template>
+
+
+
+
+
