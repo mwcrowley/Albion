@@ -85,7 +85,7 @@
 				<button class="btn postSearch" type="button" id="postSearch" href="#">Looking For</button>
 			</div>
 			<div class="vertical"></div>
-
+			<!--ADDS THE ACTUAL POSTS THEMSELVES-->
 			{{> searchPostInputTemplate}}
 			<div class="post-container">
 			</div>	
@@ -93,48 +93,68 @@
 </template>
 
 
+<!-- HOUSING POST TEMPLATE FOR POST OBJECTS -->
 <template name="housingPostTemplate">
 	<div class="media post-object">
-	  <a class="pull-left" href="#">
+		<div class="post-timestamp-box">
+		  	<a class="post-timestamp">{{postTime}}</a>	
+		</div>	
+		<a class="pull-left" href="#">
+		  	<img class="media-object img-rounded" src="/img/user.png" alt="..."></img>
+		  	<p class="poster-name">{{posterName}}</p>
+		</a>
+		<div class="media-body">
+		  	<h4 class="media-heading">{{postTitle}}</h4>
+		  	<p class="post-content">{{postContent}}</p>
+		  	<p class="post-location">{{postLocation}}</p>
+		</div>
+		<div class="media-options">
+			<p class="save-media">Save</p>
+		  	<p class="send-media">Send to Friend</p>
+		  	<p class="contact-poster">Contact</p>
+		  </div>
+	</div>
+</template>
+
+
+<!-- THE NEW POST OBJECT WRAPPER -->
+<template name="searchPostInputTemplate">
+	<div class="media post-object new-post-object">
+		<div class="post-timestamp-box">
+		  	<a class="post-timestamp">Now</a>	
+		</div>	
+
+	  <a class="pull-left" href="]#">
 	    <img class="media-object img-rounded" src="/img/user.png" alt="..."></img>
-	    <p class="poster-name">{{posterName}}</p>
+	    <p class="poster-name">Me!</p>
 	  </a>
-	  <div class="media-body">
-	    <h4 class="media-heading">{{postTitle}}</h4>
-	    <p class="post-content">{{postContent}}</p>
-	    <p class="post-location">{{postLocation}}</p>
-	    <p class="post-time">{{postTime}}</p>
-	  </div>
+	  {{> newPostHousingSubCategories}}
 	  <div class="media-options">
-	  	<p class="save-media">Save</p>
-	  	<p class="send-media">Send to Friend</p>
-	  	<p class="contact-poster">Contact</p>
+	  	<p class="publish-post">Publish</p>
+	  	<p class="cancel-post">Cancel</p>
 	  </div>
 	</div>
 </template>
 
 
-
-
-<template name="searchPostInputTemplate">
-	<div class="media post-object new-post-object">
-	  <a class="pull-left" href="]#">
-	    <img class="media-object img-rounded" src="/img/user.png" alt="..."></img>
-	    <p class="poster-name">{{posterName}}</p>
-	  </a>
+<!-- THE HOUSING-ROOMMATE FORM FOR NEW POST -->
+<template name="newPostHousingRoommateForm">
 	  <form id="new-home-post-form" class="media-body">
-	   	<input class="media-heading" name="postTitle" type="text" placeholder="Title of post">
-	   	<input class="media-heading" name="postContent" type="text" placeholder="Content of post">
-	    <input class="location" name="postLocation" type="text" placeholder="Where is the house?">
-	    <input class="category" name="postSubCategory" type="text" placeholder="Roommate">
+	   	<p>{{subCategory}}</p><input class="media-heading post-title" name="postTitle" type="text" placeholder="Title of post">
+	   	<input class="media-heading post-content" name="postContent" type="text" placeholder="Content of post">
+	    <input class="media-heading post-location" name="postLocation" type="text" placeholder="Where is the house?">
 	  </form>
-	  <div class="media-options">
-	  	<p class="publish-post">Publish</p>
-	  	<p class="send-media">Send to Friend</p>
-	  	<p class="contact-poster">Contact</p>
-	  	<p class="cancel-post">Cancel</p>
+</template>
+
+
+<!--THE SUBCATEGORY CHOOSER FOR HOUSING POST -->
+<template name="newPostHousingSubCategories">
+	  <div class="media-body">
+	    <h4 class="media-heading">What are you looking for?</h4>
+	    <button class="subcategory-chooser btn" id="roommate">Roommate</button>
+	    <button class="subcategory-chooser btn" id="couch">Couch</button>
+	    <button class="subcategory-chooser btn" id="home">Home</button>
 	  </div>
-	</div>
 </template>
 
 <template name="userHeader">

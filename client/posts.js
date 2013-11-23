@@ -1,5 +1,6 @@
 var housingPostTemplate = "housingPostTemplate";
 var homeTemplate = 'welcomeScreen';
+var newPostHousingSubCategories = "newPostHousingSubCategories";
 var categoryTemplateRendered = false;
 var newPostTemplate; 
 
@@ -56,6 +57,47 @@ function queryDataBaseForCategoryPosts(){
 	var rederedPosts = renderCategoryPosts(postArray);
 }
 
+//Takes a given ID number and queries the DB for a username. 
+function queryUserNameWithID(idNumber){
+	var fetchedUser = Meteor.users.findOne({_id:idNumber});
+	var userName = "";
+	if(fetchedUser){
+		userName = fetchedUser.services.facebook.name;
+	}
+	return userName;
+}
+
+//Takes the posted timestamp and parses to date (dd/mm)
+function getPostTime(timestamp){
+	var timeString = "";
+
+	var postTime = new Date(timestamp);
+	console.log("THE TIEMSTAMP")
+	console.log(postTime);
+	var day = postTime.getDay().toString();
+	var month = postTime.getMonth().toString();
+
+	var weekday=new Array(7);
+		weekday[0]="Sunday";
+		weekday[1]="Monday";
+		weekday[2]="Tuesday";
+		weekday[3]="Wednesday";
+		weekday[4]="Thursday";
+		weekday[5]="Friday";
+		weekday[6]="Saturday";
+
+	var monthNames = [ " January", " February", " March", " April", " May", " June",
+    " July", " August", " September", " October", " November", " December" ];
+
+	var dayOfWeek = weekday[postTime.getDay()];
+
+	timeString = dayOfWeek.concat(monthNames[month]," " ,day);
+	console.log(dayOfWeek);
+	console.log(day);
+	console.log(month);
+	return timeString;
+
+}
 
 /**Takes the returned DB array of post objects and 
 ** and then parses them and posts each one
@@ -64,16 +106,17 @@ function queryDataBaseForCategoryPosts(){
 function renderCategoryPosts(postArray){
 	$('.post-container').empty();
 	for (var i = 0; i < postArray.length; i++) {
-		console.log(postArray[i]);
+		//console.log(postArray[i]);
 		if(postArray[i].postVisible && postArray[i].postTitle){
-			console.log("post #"+i+" is visible");
+			//console.log("post #"+i+" is visible");
 			if (typeof console !== 'undefined'){
 			    var postObject = Meteor.render( function() {
 			        return Template[ housingPostTemplate ]({
-			        	posterName: postArray[i].posterID, 
+			        	posterName: queryUserNameWithID(postArray[i].posterID), 
 			         	postTitle: postArray[i].postTitle,
 			         	postContent: postArray[i].postContent,
-			         	postTime: postArray[i].postTime,
+			         	postLocation: postArray[i].postLocation,
+			         	postTime: getPostTime(postArray[i].postTime),
 		         	});
 			    })
 			   $('.post-container').prepend( postObject );
@@ -108,16 +151,56 @@ Template.searchPostInputTemplate.events({
 		queryDataBaseForCategoryPosts();
 	},
 	'click .cancel-post' : function(){
-		$(event.target).parent().siblings("form")[0].reset();
-		$(event.target).parent().parent().hide();
-	}
 
+		closeNewPostObject();
+	}
 })
+
+Template.searchPostInputTemplate.posterName = function(){
+	var userName = "USER NAME";
+	return userName;
+}
+
+
+
+Template.newPostHousingSubCategories.events({
+	'click .subcategory-chooser': function(){
+		var subcategoryID = event.target.id;
+
+		Session.set("postSubcategory", subcategoryID);
+		var subcategoryPostTemplate = "";
+		//Empties the media body for insertion of appropriate form.
+
+		if(Session.equals("postSubcategory", "roommate")){
+			console.log("roommate");
+			subcategoryPostTemplate = "newPostHousingRoommateForm";
+		}else if(Session.equals("postSubcategory", "couch")){
+			console.log("couch");
+			subcategoryPostTemplate = "newPostHousingRoommateForm";
+		}else if(Session.equals("postSubcategory", "home")){
+			console.log("home");
+			subcategoryPostTemplate = "newPostHousingRoommateForm";
+		}
+
+		if (typeof console !== 'undefined'){
+	    	var subCategoryForm = Meteor.render( function() {
+	        	return Template[ subcategoryPostTemplate ]();
+	    	})
+	    	$(event.target).parent().replaceWith( subCategoryForm );
+	    	$('.publish-post').css("visibility", "visible");
+		}
+
+	}
+})
+
+Template.newPostHousingRoommateForm.subCategory = function(){
+	return Session.get("postSubcategory");
+}
+
 
 //Takes a given form and parses it into something that can be saved to the DB
 function savePostToDB(postInfo){
     var form={};
-    console.log("PRINTING SERIALIZED ARRAY");
     var fields = $(postInfo).serializeArray();
 
     $.each(postInfo.serializeArray(), function() {
@@ -125,6 +208,7 @@ function savePostToDB(postInfo){
     });
 
     form["postCategory"] = Session.get("currentCategory");
+    form["postSubCategory"] = Session.get("postSubcategory");
     form["posterID"] = Meteor.userId();
     form["postTime"] = $.now();
     form["postVisible"] = true;
@@ -133,8 +217,8 @@ function savePostToDB(postInfo){
 
     Posts.insert(form, function(err) {
         if(!err) {
-            $(postInfo)[0].reset();
-            $(postInfo).parent().hide();
+        	//SUCCESSFUL POST!
+			closeNewPostObject()
         }
         else
         {
@@ -144,6 +228,17 @@ function savePostToDB(postInfo){
     });
 }
 
+function closeNewPostObject(){
+	if (typeof console !== 'undefined'){
+    	var subCategories = Meteor.render( function() {
+    		if(Session.equals("currentCategory", "housing")){
+        		return Template[ newPostHousingSubCategories ]();
+        	}	
+    	})
+    	$('.new-post-object').children("form").replaceWith( subCategories );
+	}
+	$('.new-post-object').hide();
+}
 
 function createNewAvailablePost(){
 

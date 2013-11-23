@@ -91,23 +91,41 @@ body{font-family: "Helvetica Neue",Helvetica,San Serif; overflow: scroll;
 		}
 
 		.new-post-object{ display: none; margin-bottom: -40px; margin-top: 40px;
-			input{display: inline;}
-			.media-body{width:300px;}
-			.media-options{padding-bottom: 20px;}
+			input{display: block;}
+
+			.post-title{width: 480px; font-size: 20px; font-weight: 100;}
+			.post-content{}
+			.media-options{padding-bottom: 20px; 
+				.publish-post{visibility: hidden;}
+			}
+			button{width:100px; margin-right: 20px; margin-top:10px;}
+
 		}
 
-		.post-object{ width: 900px; margin-left:90px; margin-bottom: 15px; padding-top: 20px; padding-bottom: 20px;
-			p{margin:0; font-weight: 200; font-size: 1em; color:@default_dark;}
-			.pull-left{ text-align: center;
-				img{height:64px; width:64px; margin-left: 10px; }
-				.poster-name{overflow: hidden; width: 70px;}
+		.post-object{ width: 950px; margin-left:20px; margin-bottom: 15px; padding-top: 20px; padding-bottom: 20px;
+			p, div{margin:0; font-weight: 200; font-size: 1em; color:@default_dark;}
+			.post-timestamp-box{float:left; margin-right: 50px; margin-top: 25px; width:120px; text-align: right;
+				a{text-align: right; width: 100%;}
+			}
+			.pull-left{ width: 90px;
+				img{height:64px; width:64px;}
+				.poster-name{overflow: hidden; width: 64px; text-align: center;}
 			}
 			.media-body{display: inline-block; margin-left: 20px; width:500px;
 				h4{margin-bottom: 8px; font-weight: 200; font-size: 1.8em;}
 			}
-			.media-options{ height: 90px; margin-top: -20px; float:right; padding-top:20px; display: inline-block; margin-left: 160px; border-left: 1px solid @default_dark;
+			.media-options{ height: 90px; width:122px; margin-top: -20px; float:right; padding-top:20px; display: inline-block; border-left: 1px solid @default_dark;
 				p{background:#eee; padding-left: 10px; padding-right: 10px;}
 			}
+
+
+		}
+
+		.postSubCategoryPicker{
+			.media-body{
+				button{display: inline-block; width: 100px; margin-top: 10px; text-align: center;}
+			}
+
 		}
 
 
@@ -121,7 +139,7 @@ body{font-family: "Helvetica Neue",Helvetica,San Serif; overflow: scroll;
 
 
 
-		.vertical{height:100%; width: 1px; top: 0px; left: 132px; z-index: -100; background: black; position: absolute; border-left: 1px}
+		.vertical{height:100%; width: 1px; top: 0px; left: 222px; z-index: -100; background: black; position: absolute; border-left: 1px}
 
 	}
 
