@@ -3,6 +3,7 @@ var homeTemplate = 'welcomeScreen';
 var newPostHousingSubCategories = "newPostHousingSubCategories";
 var categoryTemplateRendered = false;
 var newPostTemplate; 
+var subCatButtonTemplate = "subCategoryButton";
 
 Posts = new Meteor.Collection("posts");
 
@@ -32,24 +33,56 @@ Template.categoryTemplate.events({
 		createNewSearchPost();
 	},
 
-	'click .postAvailable': function() {
-		console.log("AVAILABLE FOR");
-		createNewAvailablePost();
-	}, 
+	'click .sub-cat-button': function(){
+		Session.set("subCategoryFilter", $(event.target).text());
+		queryDataBaseForCategoryPosts(Session.get("subCategoryFilter"));
+	}
 });
 
 Template.categoryTemplate.rendered = function(){
 	if(!categoryTemplateRendered){
 		queryDataBaseForCategoryPosts();
-		console.log("rendered");
+		setSubCategoryButtons();
 	}
 	categoryTemplateRendered = true;
 }
 
-function queryDataBaseForCategoryPosts(){
+function setSubCategoryButtons(){
 
-	console.log("In QueryDB Function");
-	var categoryPosts = Posts.find({postCategory:Session.get("currentCategory")});
+	var housingSubCategories = new Array(3);
+		housingSubCategories[0] = "roommate";
+		housingSubCategories[1] = "couch";
+		housingSubCategories[2] = "home";
+
+	if(Session.equals("housing")){
+		generateSubCatButtons(housingSubCategories);
+	}
+}
+
+function generateSubCatButtons(subCats){
+	for (var i = subCats.length - 1; i >= 0; i--) {
+		var subCategory = subCats[i];
+	
+		if (typeof console !== 'undefined'){
+		    var subCatButton = Meteor.render( function() {
+		        return Template[ subCatButtonTemplate ]({
+		        	subCat: subCategory,
+		        });
+		    });
+		   $('.sub-cat-buttons').append(subCatButton);
+		}
+	};
+
+}
+
+
+function queryDataBaseForCategoryPosts(subCategories){
+	subCategories = subCategories || "roommate";
+
+	var categoryPosts = Posts.find({
+		postCategory:Session.get("currentCategory"),
+		postSubCategory:subCategories,
+	});
 	var postArray = categoryPosts.fetch();
 	console.log(postArray);
 
@@ -72,8 +105,6 @@ function getPostTime(timestamp){
 	var timeString = "";
 
 	var postTime = new Date(timestamp);
-	console.log("THE TIEMSTAMP")
-	console.log(postTime);
 	var day = postTime.getDay().toString();
 	var month = postTime.getMonth().toString();
 
@@ -90,13 +121,8 @@ function getPostTime(timestamp){
     " July", " August", " September", " October", " November", " December" ];
 
 	var dayOfWeek = weekday[postTime.getDay()];
-
 	timeString = dayOfWeek.concat(monthNames[month]," " ,day);
-	console.log(dayOfWeek);
-	console.log(day);
-	console.log(month);
 	return timeString;
-
 }
 
 /**Takes the returned DB array of post objects and 
@@ -189,7 +215,6 @@ Template.newPostHousingSubCategories.events({
 	    	$(event.target).parent().replaceWith( subCategoryForm );
 	    	$('.publish-post').css("visibility", "visible");
 		}
-
 	}
 })
 

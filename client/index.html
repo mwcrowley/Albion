@@ -70,19 +70,11 @@
 				  </ul>
 				</div>
 				<!-- CIRCLE -->
-				<div class="dropdown">
-				  <button class="btn dropdown-toggle sr-only" type="button" id="dropdownMenu2" data-toggle="dropdown">
-				    circle: facebook
-				    <span class="caret"></span>
-				  </button>
-				  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">twitter</a></li>
-				    <li role="presentation"><a role="menuitem" tabindex="-1" href="#">linkedIn</a></li>
-				    <li role="presentation" class="disabled"><a role="menuitem" tabindex="-1" href="#">instagram</a></li>
-				  </ul>
+				<div class="btn-group sub-cat-buttons">
+					{{addSubCategoryButtons}}
 				</div>
 				<!-- ADD POSTING -->
-				<button class="btn postSearch" type="button" id="postSearch" href="#">Looking For</button>
+				<button class="btn postSearch btn-primary" type="button" id="postSearch" href="#">+ Post</button>
 			</div>
 			<div class="vertical"></div>
 			<!--ADDS THE ACTUAL POSTS THEMSELVES-->
@@ -92,17 +84,21 @@
 		</div>
 </template>
 
+<template name="subCategoryButton">
+	<button type="button" class="btn sub-cat-button btn-default">{{subCat}}</button>
+</template>
+
 
 <!-- HOUSING POST TEMPLATE FOR POST OBJECTS -->
 <template name="housingPostTemplate">
 	<div class="media post-object">
 		<div class="post-timestamp-box">
-		  	<a class="post-timestamp">{{postTime}}</a>	
+		  	<p class="post-timestamp">{{postTime}}</p>	
 		</div>	
-		<a class="pull-left" href="#">
+		<div class="pull-left" href="#">
 		  	<img class="media-object img-rounded" src="/img/user.png" alt="..."></img>
 		  	<p class="poster-name">{{posterName}}</p>
-		</a>
+		</div>
 		<div class="media-body">
 		  	<h4 class="media-heading">{{postTitle}}</h4>
 		  	<p class="post-content">{{postContent}}</p>
@@ -141,7 +137,7 @@
 <template name="newPostHousingRoommateForm">
 	  <form id="new-home-post-form" class="media-body">
 	   	<p>{{subCategory}}</p><input class="media-heading post-title" name="postTitle" type="text" placeholder="Title of post">
-	   	<input class="media-heading post-content" name="postContent" type="text" placeholder="Content of post">
+	   	<textarea maxlength="140" form="new-home-post-form" class="form-control" name="postContent" rows="3" placeholder="Content of post"></textarea>
 	    <input class="media-heading post-location" name="postLocation" type="text" placeholder="Where is the house?">
 	  </form>
 </template>
