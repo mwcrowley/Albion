@@ -11,9 +11,6 @@ Meteor.startup(function() {
 });
 
 Meteor.autorun(function() {
-  //var fbID = Meteor.user().services.facebook.id;
-  //console.log("FBID="+fbID);
-
 });
 
 
@@ -23,14 +20,24 @@ Template.welcomeScreen.events({
 	  // template data, if any, is available in 'this'
 	  if (typeof console !== 'undefined')
 	    
-	    var idName = event.target.id;
-	    console.log(idName);
+	    var idName = $(event.target).attr('id');
+
+		var categoryPostBoardTemplate; 
+
+		if(idName == "housing"){
+			Session.set("currentCategory", "housing"); 
+		}else if(idName == "jobs"){
+			Session.set("currentCategory", "jobs"); 
+		}else if(idName == "people"){
+			Session.set("currentCategory", "people"); 
+		}
 
 	    var postingsTemplate = Meteor.render( function() {
 	        return Template[ categoryTemplate ]();
 	    })
 
 	    $('.content-container').html( postingsTemplate );
+
 	}
 });
 

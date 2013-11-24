@@ -10,9 +10,14 @@ Posts = new Meteor.Collection("posts");
 Deps.autorun(function () {
   Meteor.subscribe("posts", {postCategory: Session.get("currentCategory")} );
 
+  Session.set("subCategoryFilter", "all types"); 
+
   if(Session.equals("currentCategory", "housing")){
-  	//newPostTemplate = $('.new-post-object');
   	console.log("CURRENT CATEGORY SET TO HOUSING");
+  }else if(Session.equals("currentCategory", "jobs")){
+  	console.log("CURRENT CATEGORY SET TO JOBS");
+  }else if(Session.equals("currentCategory", "people")){
+  	console.log("CURRENT CATEGORY SET TO PEOPLE");
   }
 });
 
@@ -25,6 +30,8 @@ Template.categoryTemplate.events({
 	    var home = Meteor.render( function() {
 	        return Template[ homeTemplate ]();
 	    })
+		//SETS CATEGORY TEMPLATE TO UNRENDERED SO IT RUNS ONCE CLICKED AGAIN
+		categoryTemplateRendered = false;
 	    $('.content-container').html( home );
 	},
 
@@ -39,6 +46,14 @@ Template.categoryTemplate.events({
 	}
 });
 
+
+//SETS THE HEADER LOGO TO DISPLAY WHICHEVER CATEGORY YOU SELECTED
+Template.categoryTemplate.category = function(){
+	var categoryHeader = Session.get("currentCategory");
+	return categoryHeader;
+}
+
+//THIS IS TRIGGERED ONCE THE POST SCREEN IS RENDERED
 Template.categoryTemplate.rendered = function(){
 	if(!categoryTemplateRendered){
 		queryDataBaseForCategoryPosts();
@@ -49,11 +64,13 @@ Template.categoryTemplate.rendered = function(){
 
 function setSubCategoryButtons(){
 
-	var housingSubCategories = new Array(3);
-		housingSubCategories[0] = "roommate";
+	var housingSubCategories = new Array(4);
+		housingSubCategories[0] = "all types";
 		housingSubCategories[1] = "couch";
 		housingSubCategories[2] = "home";
+		housingSubCategories[3] = "roommate";
 
+	//IF THE CATEGORY IS HOUSING GENERATE THE HOUSING SUBCAT BUTTONS
 	if(Session.equals("housing")){
 		generateSubCatButtons(housingSubCategories);
 	}
@@ -75,16 +92,31 @@ function generateSubCatButtons(subCats){
 
 }
 
-
+/** GIVEN A SUBCATEGORY THE SYSTEM WILL SEARCH FOR ALL POSTS
+** UNDER THAT SUBCATEGORY AND RETURN A CURSOR CONTAINING
+** ALL POST OBJECTS THAT FIT THE CRITERIA
+**/
 function queryDataBaseForCategoryPosts(subCategories){
-	subCategories = subCategories || "roommate";
 
+	//Finds all posts that are 
 	var categoryPosts = Posts.find({
-		postCategory:Session.get("currentCategory"),
-		postSubCategory:subCategories,
+		postCategory:Session.get("currentCategory")
 	});
-	var postArray = categoryPosts.fetch();
-	console.log(postArray);
+
+	var postArray = new Array();
+	
+	categoryPosts.forEach(function (post) {
+
+		//IF THE VIEW IS SET TO SEE ALL CATEGORY POSTS IT TAKES ALL POSTS AND PUTS IN ARRAY
+		if(Session.equals("subCategoryFilter", "all types")){
+			postArray.push(post);
+		}else{
+			var catToMatch = Session.get("subCategoryFilter");
+			if(post.postSubCategory == catToMatch){
+				postArray.push(post);
+			}
+		}
+	});
 
 	//Takes the received array and renders the individual (visible) posts
 	var rederedPosts = renderCategoryPosts(postArray);
@@ -95,7 +127,7 @@ function queryUserNameWithID(idNumber){
 	var fetchedUser = Meteor.users.findOne({_id:idNumber});
 	var userName = "";
 	if(fetchedUser){
-		userName = fetchedUser.services.facebook.name;
+		userName = fetchedUser.services.facebook;
 	}
 	return userName;
 }
@@ -136,13 +168,17 @@ function renderCategoryPosts(postArray){
 		if(postArray[i].postVisible && postArray[i].postTitle){
 			//console.log("post #"+i+" is visible");
 			if (typeof console !== 'undefined'){
+
+				var facebookProfile = queryUserNameWithID(postArray[i].posterID);
+
 			    var postObject = Meteor.render( function() {
 			        return Template[ housingPostTemplate ]({
-			        	posterName: queryUserNameWithID(postArray[i].posterID), 
+			        	posterName: facebookProfile.name, 
 			         	postTitle: postArray[i].postTitle,
 			         	postContent: postArray[i].postContent,
 			         	postLocation: postArray[i].postLocation,
 			         	postTime: getPostTime(postArray[i].postTime),
+			         	posterImage: facebookProfile.username
 		         	});
 			    })
 			   $('.post-container').prepend( postObject );
@@ -177,7 +213,6 @@ Template.searchPostInputTemplate.events({
 		queryDataBaseForCategoryPosts();
 	},
 	'click .cancel-post' : function(){
-
 		closeNewPostObject();
 	}
 })
@@ -263,9 +298,4 @@ function closeNewPostObject(){
     	$('.new-post-object').children("form").replaceWith( subCategories );
 	}
 	$('.new-post-object').hide();
-}
-
-function createNewAvailablePost(){
-
-	
 }

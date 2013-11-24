@@ -18,7 +18,7 @@
 <body>
 	{{> userHeader}}
 	<div class="content-container">
-		{{> categoryTemplate}}
+		{{> welcomeScreen}}
 
 		{{#if currentUser}}
 			
@@ -35,13 +35,13 @@
 
   		<div class="category-bar">
 	  		<div id="housing" class="category">
-	  			<p class="test">housing</p>
+	  			housing
 	  		</div>
 	  		<div id="jobs" class="category">
-	  			<p>jobs</p>
+	  			jobs
 	  		</div>
-	  		<div id="relationships" class="category">
-	  			<p>people</p>
+	  		<div id="people" class="category">
+	  			people
 	  		</div>
   		</div>
 	</div>
@@ -53,7 +53,7 @@
 			<div class="category-header">
 				<div class="small-logo">alby</div>
 				<div class="category-icon"></div>
-				<div class="category-title">housing</div>
+				<div class="category-title">{{category}}</div>
 			</div>
 			<div class="filter-bar">
 
@@ -96,7 +96,7 @@
 		  	<p class="post-timestamp">{{postTime}}</p>	
 		</div>	
 		<div class="pull-left" href="#">
-		  	<img class="media-object img-rounded" src="/img/user.png" alt="..."></img>
+		  	<img class="media-object img-rounded" src="https://graph.facebook.com/{{posterImage}}/picture" alt="..."></img>
 		  	<p class="poster-name">{{posterName}}</p>
 		</div>
 		<div class="media-body">
