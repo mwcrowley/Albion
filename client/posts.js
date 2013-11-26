@@ -33,6 +33,7 @@ Template.categoryTemplate.events({
 		//SETS CATEGORY TEMPLATE TO UNRENDERED SO IT RUNS ONCE CLICKED AGAIN
 		categoryTemplateRendered = false;
 	    $('.content-container').html( home );
+	    Session.set("subCategoryFilter", "all types"); 
 	},
 
 	'click .postSearch': function() {

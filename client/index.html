@@ -18,7 +18,7 @@
 <body>
 	{{> userHeader}}
 	<div class="content-container">
-		{{> welcomeScreen}}
+		{{> categoryTemplate}}
 
 		{{#if currentUser}}
 			
@@ -78,6 +78,7 @@
 			</div>
 			<div class="vertical"></div>
 			<!--ADDS THE ACTUAL POSTS THEMSELVES-->
+
 			{{> searchPostInputTemplate}}
 			<div class="post-container">
 			</div>	
@@ -91,24 +92,50 @@
 
 <!-- HOUSING POST TEMPLATE FOR POST OBJECTS -->
 <template name="housingPostTemplate">
-	<div class="media post-object">
-		<div class="post-timestamp-box">
-		  	<p class="post-timestamp">{{postTime}}</p>	
-		</div>	
-		<div class="pull-left" href="#">
-		  	<img class="media-object img-rounded" src="https://graph.facebook.com/{{posterImage}}/picture" alt="..."></img>
-		  	<p class="poster-name">{{posterName}}</p>
+	<div class="media post-object-two">
+		<img class="post-image " src="/img/location.jpg" alt="..."></img>
+		<div class="post-user-info">
+	    	<img class="post-user-image img-rounded" src="/img/user.png" alt="..."></img>
+			<div class="post-user">
+				<h4>{{posterName}}</h4>
+				<p>Posted: {{postTime}}</p>
+				<p>{{postLocation}}</p>
+			</div>
 		</div>
-		<div class="media-body">
-		  	<h4 class="media-heading">{{postTitle}}</h4>
-		  	<p class="post-content">{{postContent}}</p>
-		  	<p class="post-location">{{postLocation}}</p>
+		<div class="post-content">
+			<h4>{{postTitle}}</h4>
+			<p>{{postContent}}</p>
 		</div>
-		<div class="media-options">
-			<p class="save-media">Save</p>
-		  	<p class="send-media">Send to Friend</p>
-		  	<p class="contact-poster">Contact</p>
-		  </div>
+		<div class="post-actions">
+			<p>Save</p>
+			<p>Share</p>
+			<p>Hide</p>
+		</div>
+	</div>
+</template>
+
+
+<!-- HOUSING POST TEMPLATE FOR POST OBJECTS -->
+<template name="housingPostTemplateTwo">
+	<div class="media post-object-two">
+		<img class="post-image " src="/img/location.jpg" alt="..."></img>
+		<div class="post-user-info">
+	    	<img class="post-user-image img-rounded" src="/img/user.png" alt="..."></img>
+			<div class="post-user">
+				<h4>{{posterName}}</h4>
+				<p>Posted: {{postTime}}</p>
+				<p>{{postLocation}}</p>
+			</div>
+		</div>
+		<div class="post-content">
+			<h4>{{postTitle}}</h4>
+			<p>{{postContent}}</p>
+		</div>
+		<div class="post-actions">
+			<p>Save</p>
+			<p>Share</p>
+			<p>Hide</p>
+		</div>
 	</div>
 </template>
 
