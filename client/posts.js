@@ -9,7 +9,6 @@ Posts = new Meteor.Collection("posts");
 
 Deps.autorun(function () {
   Meteor.subscribe("posts", {postCategory: Session.get("currentCategory")} );
-
   Session.set("subCategoryFilter", "all types"); 
 
   if(Session.equals("currentCategory", "housing")){
@@ -25,15 +24,8 @@ Deps.autorun(function () {
 
 Template.categoryTemplate.events({
 	'click .small-logo' : function () {
-	  // template data, if any, is available in 'this'
-	  if (typeof console !== 'undefined')
-	    var home = Meteor.render( function() {
-	        return Template[ homeTemplate ]();
-	    })
-		//SETS CATEGORY TEMPLATE TO UNRENDERED SO IT RUNS ONCE CLICKED AGAIN
-		categoryTemplateRendered = false;
-	    $('.content-container').html( home );
-	    Session.set("subCategoryFilter", "all types"); 
+		Session.set("categoryTemplateRendered", false);
+		Meteor.Router.to('/');
 	},
 
 	'click .postSearch': function() {
@@ -56,11 +48,12 @@ Template.categoryTemplate.category = function(){
 
 //THIS IS TRIGGERED ONCE THE POST SCREEN IS RENDERED
 Template.categoryTemplate.rendered = function(){
-	if(!categoryTemplateRendered){
+	var renderState = Session.get('categoryTemplateRendered');
+	if(!renderState){
 		queryDataBaseForCategoryPosts();
 		setSubCategoryButtons();
 	}
-	categoryTemplateRendered = true;
+	Session.set("categoryTemplateRendered", true);
 }
 
 function setSubCategoryButtons(){
@@ -74,6 +67,7 @@ function setSubCategoryButtons(){
 	//IF THE CATEGORY IS HOUSING GENERATE THE HOUSING SUBCAT BUTTONS
 	if(Session.equals("housing")){
 		generateSubCatButtons(housingSubCategories);
+		
 	}
 }
 
@@ -118,7 +112,6 @@ function queryDataBaseForCategoryPosts(subCategories){
 			}
 		}
 	});
-
 	//Takes the received array and renders the individual (visible) posts
 	var rederedPosts = renderCategoryPosts(postArray);
 }

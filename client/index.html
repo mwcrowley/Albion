@@ -16,22 +16,17 @@
 </head>
 
 <body>
-	{{> userHeader}}
-	<div class="content-container">
-		{{> categoryTemplate}}
-
 		{{#if currentUser}}
-			
+			{{> userHeader}}
 		{{else}}
-			<p>Please Log In</p>
+			{{> userHeader}}
 		{{/if}}
-	</div>
 </body>
 
 <template name="welcomeScreen">
   <div class="welcome-header">
   		<h1>alby</h2>
-  		<h2>with a little help from your friends, find:</h2>
+  		<h2>with a little help from your friends find:</h2>
 
   		<div class="category-bar">
 	  		<div id="housing" class="category">
@@ -47,6 +42,11 @@
 	</div>
 </template>
 
+<template name="not_found">
+  <div class="404">
+  		<h1>Sorry, nothing here</h1>
+	</div>
+</template>
 
 <template name="categoryTemplate">
 		<div class="category-page">

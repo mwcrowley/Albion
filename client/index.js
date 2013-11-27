@@ -1,46 +1,80 @@
-var homeTemplate = 'welcomeScreen';
-var categoryTemplate = 'categoryTemplate';
-var postTemplate = 'postTemplate';
-
-var userID;
-
-
 
 Meteor.startup(function() {
-    Session.set("currentCategory", "housing");
+    Session.set("currentCategory", "none");
+	Session.set("subCategoryFilter", "all types"); 
+	Session.set('currentCategory', 'none');
+	Session.set("categoryTemplateRendered", false);
 });
 
 Meteor.autorun(function() {
+
+
 });
 
 
+Meteor.Router.add({
+    '/': function(){
+    	Session.set('currentCategory', 'none');
+    	//Loads and renders the home page template.
+    	renderWelcomeTemplate();
+    	//SETS CATEGORY TEMPLATE TO UNRENDERED SO IT RUNS ONCE CLICKED AGAIN
+    	Session.set("subCategoryFilter", "all types"); 
+    },
+
+    '/housing': function() {
+      	Session.set('currentCategory', 'housing');
+      	renderCategoryTemplate();
+  	},
+	'/jobs': function() {
+      	Session.set('currentCategory', 'jobs');
+      	renderCategoryTemplate();
+  	},
+    '/people': function() {
+      	Session.set('currentCategory', 'people');
+      	renderCategoryTemplate();
+  	},
+  	'*': 'not_found'
+})
+
 
 Template.welcomeScreen.events({
+
+	//Listens for the clicking of any of the categories and triggers the appropriate page.
 	'click .category' : function () {
 	  // template data, if any, is available in 'this'
 	  if (typeof console !== 'undefined')
 	    
 	    var idName = $(event.target).attr('id');
 
-		var categoryPostBoardTemplate; 
-
 		if(idName == "housing"){
-			Session.set("currentCategory", "housing"); 
+			Session.set("currentCategory", "housing");
+			Meteor.Router.to('/housing');
 		}else if(idName == "jobs"){
-			Session.set("currentCategory", "jobs"); 
+			Session.set("currentCategory", "jobs");
+			Meteor.Router.to('/jobs'); 
 		}else if(idName == "people"){
-			Session.set("currentCategory", "people"); 
+			Session.set("currentCategory", "people");
+			Meteor.Router.to('/people'); 
 		}
-
-	    var postingsTemplate = Meteor.render( function() {
-	        return Template[ categoryTemplate ]();
-	    })
-
-	    $('.content-container').html( postingsTemplate );
-
 	}
 });
 
+function renderCategoryTemplate(){
+    var postingsTemplate = Meteor.render( function() {
+        return Template[ 'categoryTemplate' ]();
+    })
+    $('body').html( postingsTemplate );
+}
+
+function renderWelcomeTemplate(){
+  	// template data, if any, is available in 'this'
+  	if (typeof console !== 'undefined'){
+    	var home = Meteor.render( function() {
+	        return Template[ 'welcomeScreen' ]();
+	    })
+    }
+    $('body').html( home );
+}
 
 
 Template.userBar.userID = function(){
